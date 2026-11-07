@@ -93,9 +93,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Banner de Avisos Importantes */}
       <div className="space-y-3">
         {!activeShiftOpen && (
-          <div className="flex items-center justify-between p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 shadow-xs">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-100 text-amber-800">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 shadow-xs">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0">
                 <Wallet className="w-5 h-5" />
               </div>
               <div>
@@ -107,7 +107,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <button
               onClick={onOpenCash}
-              className="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-amber-600 hover:bg-amber-700 text-white transition-colors"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold rounded-lg bg-amber-600 hover:bg-amber-700 text-white transition-colors cursor-pointer text-center shrink-0"
             >
               Abrir Caixa
             </button>
@@ -115,9 +115,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         )}
 
         {pendingCount > 0 && (
-          <div className="flex items-center justify-between p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 shadow-xs">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-rose-100 text-rose-800">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 shadow-xs">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="p-2 rounded-lg bg-rose-100 text-rose-800 shrink-0">
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
@@ -131,7 +131,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <button
               onClick={onViewPendingInvoices}
-              className="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition-colors flex items-center gap-1.5"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
             >
               <span>Resolver Pendências</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -262,7 +262,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider mb-4 flex items-center gap-2">
           <span>Recebimentos por Forma de Pagamento</span>
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/60 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
               <Banknote className="w-5 h-5" />

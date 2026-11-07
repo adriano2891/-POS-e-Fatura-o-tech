@@ -145,6 +145,7 @@ export default function App() {
         {currentTab === 'products' && (
           <ProductsView
             currentUser={{ id: currentUser.id, name: currentUser.name, role: currentUser.role }}
+            onProductSaved={refreshShiftAndMetrics}
           />
         )}
 

@@ -52,6 +52,7 @@ import { InvoiceTicketModal } from './InvoiceTicketModal';
 export interface CartItem extends SaleItem {
   internalCode?: string;
   imageUrl?: string;
+  description?: string;
 }
 
 interface PosViewProps {
@@ -69,6 +70,9 @@ export const PosView: React.FC<PosViewProps> = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Controle de Abas no Mobile ('catalog' = cardápio de produtos, 'cart' = caixa / carrinho)
+  const [mobilePosTab, setMobilePosTab] = useState<'catalog' | 'cart'>('catalog');
 
   // Filtros de produtos (Área Esquerda Intocada)
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -137,6 +141,14 @@ export const PosView: React.FC<PosViewProps> = ({
 
   useEffect(() => {
     loadData();
+
+    const handleCatalogUpdate = () => {
+      loadData();
+    };
+    window.addEventListener('catalog-updated', handleCatalogUpdate);
+    return () => {
+      window.removeEventListener('catalog-updated', handleCatalogUpdate);
+    };
   }, []);
 
   const loadData = async () => {
@@ -317,6 +329,7 @@ export const PosView: React.FC<PosViewProps> = ({
             ivaAmount: Number((rawTotal - base).toFixed(2)),
             internalCode: product.internalCode || '1001',
             imageUrl: itemImg,
+            description: product.description,
             notes: '',
           },
         ];
@@ -471,9 +484,43 @@ export const PosView: React.FC<PosViewProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 h-[calc(100vh-130px)] min-h-[580px] max-h-[calc(100vh-110px)]">
+    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-3 h-auto lg:h-[calc(100vh-130px)] lg:min-h-[580px] lg:max-h-[calc(100vh-110px)] relative">
+      {/* SELETOR MOBILE: CARDÁPIO vs CARRINHO / FECHAMENTO (Visível exclusivamente em telas < lg) */}
+      <div className="lg:hidden flex items-center bg-[#0d1520] p-1 rounded-2xl border border-slate-800 shrink-0">
+        <button
+          type="button"
+          onClick={() => setMobilePosTab('catalog')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            mobilePosTab === 'catalog'
+              ? 'bg-[#00E676] text-stone-950 shadow-md'
+              : 'text-stone-300 hover:text-white'
+          }`}
+        >
+          <Utensils className="w-4 h-4" />
+          <span>Cardápio / Produtos</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMobilePosTab('cart')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            mobilePosTab === 'cart'
+              ? 'bg-amber-500 text-stone-950 shadow-md'
+              : 'text-stone-300 hover:text-white'
+          }`}
+        >
+          <ShoppingCart className="w-4 h-4" />
+          <span>Pedido {cartItems.length > 0 ? `(${cartItems.reduce((acc, i) => acc + i.quantity, 0)})` : ''}</span>
+          {totals.final > 0 && (
+            <span className="font-mono text-[11px] font-black ml-1 px-1.5 py-0.5 rounded-md bg-stone-950/40">
+              {formatCurrency(totals.final)}
+            </span>
+          )}
+        </button>
+      </div>
+
       {/* COLUNA ESQUERDA: CATÁLOGO DE PRODUTOS & IMAGENS (Cols 1-7) */}
-      <div className="lg:col-span-7 xl:col-span-7 2xl:col-span-7 flex flex-col h-full bg-[#0d1520] rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+      <div className={`${mobilePosTab === 'catalog' ? 'flex' : 'hidden'} lg:flex lg:col-span-7 xl:col-span-7 2xl:col-span-7 flex-col h-[75vh] lg:h-full bg-[#0d1520] rounded-2xl border border-slate-800 shadow-xl overflow-hidden`}>
         {/* Barra Superior do Catálogo: Filtros e Pesquisa */}
         <div className="p-3 border-b border-slate-800 space-y-2.5 bg-[#0d1520] shrink-0">
           <div className="flex items-center gap-2.5 justify-between">
@@ -581,6 +628,13 @@ export const PosView: React.FC<PosViewProps> = ({
                     {prod.name}
                   </h4>
 
+                  {/* Descrição do Produto (Reflete em tempo real no PDV) */}
+                  {prod.description ? (
+                    <p className="text-[10px] text-stone-400 line-clamp-1 text-center w-full mt-0.5 px-1 font-normal" title={prod.description}>
+                      {prod.description}
+                    </p>
+                  ) : null}
+
                   {/* Preço do Produto */}
                   <div className="mt-1 flex items-center justify-center w-full">
                     <span className="text-sm sm:text-base font-black text-white font-mono">
@@ -595,7 +649,7 @@ export const PosView: React.FC<PosViewProps> = ({
       </div>
 
       {/* COLUNA DIREITA: CAIXA PDV PROFISSIONAL ASSX TECH (Ajustado, sem cortes e 100% responsivo) */}
-      <div className="lg:col-span-5 xl:col-span-5 2xl:col-span-5 flex flex-col h-full bg-[#0d1520] rounded-2xl border-2 border-emerald-500 shadow-2xl overflow-hidden text-white">
+      <div className={`${mobilePosTab === 'cart' ? 'flex' : 'hidden'} lg:flex lg:col-span-5 xl:col-span-5 2xl:col-span-5 flex-col min-h-[550px] lg:h-full bg-[#0d1520] rounded-2xl border-2 border-emerald-500 shadow-2xl overflow-hidden text-white`}>
         {/* 1. CABEÇALHO DA VENDA */}
         <div className="p-2.5 sm:p-3 border-b border-slate-800 bg-[#0d1520] space-y-2 shrink-0">
           <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
@@ -821,6 +875,11 @@ export const PosView: React.FC<PosViewProps> = ({
                     <h5 className="font-bold text-xs text-white truncate leading-tight">
                       {item.productName}
                     </h5>
+                    {item.description ? (
+                      <p className="text-[10px] text-stone-400 truncate max-w-[170px]" title={item.description}>
+                        {item.description}
+                      </p>
+                    ) : null}
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="text-[9px] font-mono text-stone-400">
                         Cód: {item.internalCode || '1001'}
@@ -1096,8 +1155,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 1: PAGAMENTO & EMISSÃO FISCAL */}
       {isPaymentModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="relative w-full max-w-xl bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-700 text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-700 text-white max-h-[94vh] flex flex-col my-auto">
             {/* Cabeçalho */}
             <div className="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
               <div>
@@ -1463,8 +1522,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 2: APLICAR DESCONTO */}
       {isDiscountModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-5 text-white space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-4 sm:p-5 text-white space-y-4 max-h-[94vh] overflow-y-auto my-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
                 <Percent className="w-5 h-5 text-sky-400" />
@@ -1561,8 +1620,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 3: IDENTIFICAR CLIENTE */}
       {isCustomerModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl shadow-xl overflow-hidden text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl shadow-xl overflow-hidden text-white max-h-[94vh] flex flex-col my-auto">
             <div className="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <User className="w-5 h-5 text-sky-400" />
@@ -1800,8 +1859,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 5: OBSERVAÇÃO ESPECÍFICA DO ITEM */}
       {itemNotesModalState && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-5 text-white space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-4 sm:p-5 text-white space-y-4 max-h-[94vh] overflow-y-auto my-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
                 <h4 className="font-extrabold text-sm">Observação do Item</h4>
@@ -1885,8 +1944,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 6: IMPRIMIR PRÉ-CONTA / CONFERÊNCIA DE MESA */}
       {isPreBillModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden border border-stone-200 text-stone-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden border border-stone-200 text-stone-900 max-h-[94vh] flex flex-col my-auto">
             {/* Cabeçalho do Cupom */}
             <div className="p-4 bg-purple-700 text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -2018,8 +2077,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 7: CONFIRMAÇÃO DE LIMPAR PEDIDO */}
       {isClearCartConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-5 text-white space-y-4 text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-4 sm:p-5 text-white space-y-4 text-center my-auto">
             <div className="w-12 h-12 rounded-full bg-slate-800 text-amber-400 flex items-center justify-center mx-auto border border-slate-700">
               <Trash2 className="w-6 h-6" />
             </div>
@@ -2033,14 +2092,14 @@ export const PosView: React.FC<PosViewProps> = ({
               <button
                 type="button"
                 onClick={() => setIsClearCartConfirmOpen(false)}
-                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-slate-800 text-stone-300 hover:bg-slate-700"
+                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-slate-800 text-stone-300 hover:bg-slate-700 cursor-pointer"
               >
                 Não, manter
               </button>
               <button
                 type="button"
                 onClick={clearCart}
-                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-slate-700 hover:bg-slate-600 text-white"
+                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-slate-700 hover:bg-slate-600 text-white cursor-pointer"
               >
                 Sim, limpar
               </button>
@@ -2051,8 +2110,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* MODAL 8: CONFIRMAÇÃO DE CANCELAR VENDA */}
       {isCancelSaleConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-5 text-white space-y-4 text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl shadow-xl p-4 sm:p-5 text-white space-y-4 text-center my-auto">
             <div className="w-12 h-12 rounded-full bg-rose-950 text-rose-400 flex items-center justify-center mx-auto border border-rose-800">
               <X className="w-6 h-6" />
             </div>
@@ -2066,14 +2125,14 @@ export const PosView: React.FC<PosViewProps> = ({
               <button
                 type="button"
                 onClick={() => setIsCancelSaleConfirmOpen(false)}
-                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-slate-800 text-stone-300 hover:bg-slate-700"
+                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-slate-800 text-stone-300 hover:bg-slate-700 cursor-pointer"
               >
                 Voltar à Venda
               </button>
               <button
                 type="button"
                 onClick={cancelSale}
-                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-rose-700 hover:bg-rose-600 text-white"
+                className="flex-1 py-2.5 rounded-xl font-bold text-xs bg-rose-700 hover:bg-rose-600 text-white cursor-pointer"
               >
                 Cancelar Venda
               </button>
@@ -2094,8 +2153,8 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* AVISO: VENDA REGISTRADA COM FATURAÇÃO PENDENTE */}
       {completedPendingSaleNotice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-slate-900 rounded-2xl shadow-xl p-6 border border-slate-700 space-y-4 text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-md bg-slate-900 rounded-2xl shadow-xl p-5 sm:p-6 border border-slate-700 space-y-4 text-white max-h-[94vh] overflow-y-auto my-auto">
             <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto border border-amber-500/40">
               <AlertTriangle className="w-6 h-6" />
             </div>
@@ -2118,6 +2177,28 @@ export const PosView: React.FC<PosViewProps> = ({
               Compreendi
             </button>
           </div>
+        </div>
+      )}
+
+      {/* BARRA FLUTUANTE DE FINALIZAÇÃO NO MOBILE (Apenas em telas pequenas quando no catálogo e houver itens) */}
+      {cartItems.length > 0 && mobilePosTab === 'catalog' && (
+        <div className="lg:hidden sticky bottom-1 z-30 px-1 animate-in slide-in-from-bottom-2">
+          <button
+            type="button"
+            onClick={() => setMobilePosTab('cart')}
+            className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-stone-950 rounded-2xl font-black text-xs sm:text-sm shadow-2xl border border-emerald-400 active:scale-95 transition-all cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-lg bg-stone-950 text-emerald-400 flex items-center justify-center text-xs font-black">
+                {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+              </span>
+              <span>Itens no Pedido</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-sm sm:text-base">{formatCurrency(totals.final)}</span>
+              <span className="text-[11px] font-bold bg-stone-950/20 px-2 py-1 rounded-lg">Ver Carrinho &rarr;</span>
+            </div>
+          </button>
         </div>
       )}
     </div>

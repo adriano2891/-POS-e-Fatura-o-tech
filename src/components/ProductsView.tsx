@@ -27,9 +27,10 @@ import {
 
 interface ProductsViewProps {
   currentUser: { id: string; name: string; role: 'admin' | 'operador' };
+  onProductSaved?: () => void;
 }
 
-export const ProductsView: React.FC<ProductsViewProps> = ({ currentUser }) => {
+export const ProductsView: React.FC<ProductsViewProps> = ({ currentUser, onProductSaved }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -220,7 +221,13 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ currentUser }) => {
       }
 
       setIsModalOpen(false);
-      loadData();
+      await loadData();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('catalog-updated', { detail: { productId: editingProduct?.id } }));
+      }
+      if (onProductSaved) {
+        onProductSaved();
+      }
     } catch (err: any) {
       alert(`Erro ao guardar produto: ${err.message || 'Falha no servidor'}`);
     }
@@ -855,9 +862,9 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ currentUser }) => {
 
       {/* MODAL DE HISTÓRICO DE PREÇOS */}
       {historyTargetProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
-            <div className="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 my-auto max-h-[90vh] flex flex-col">
+            <div className="p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
               <div>
                 <h4 className="font-bold text-sm">Histórico de Alterações de Preço</h4>
                 <p className="text-xs text-stone-400">{historyTargetProduct.name}</p>

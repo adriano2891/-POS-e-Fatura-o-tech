@@ -36,26 +36,10 @@
   "users": [
     {
       "id": "usr-1",
-      "name": "Carlos Silva",
-      "email": "carlos@assxtech.com.br",
+      "name": "Gregory",
+      "email": "Gregory@assxtech.com.br",
       "role": "admin",
       "pin": "1234",
-      "active": true
-    },
-    {
-      "id": "usr-2",
-      "name": "Maria Santos",
-      "email": "maria@assxtech.com.br",
-      "role": "operador",
-      "pin": "5678",
-      "active": true
-    },
-    {
-      "id": "usr-3",
-      "name": "João Pereira",
-      "email": "joao@assxtech.com.br",
-      "role": "operador",
-      "pin": "0000",
       "active": true
     }
   ],
@@ -524,7 +508,7 @@
       "shiftId": "shift-1",
       "createdAt": "2026-11-07T01:44:33.011Z",
       "operatorId": "usr-1",
-      "operatorName": "Carlos Silva",
+      "operatorName": "Gregory",
       "customer": {
         "name": "Consumidor Final",
         "nif": "999999990"
@@ -595,7 +579,7 @@
       "shiftId": "shift-1",
       "createdAt": "2026-11-07T01:08:59.106Z",
       "operatorId": "usr-1",
-      "operatorName": "Carlos Silva",
+      "operatorName": "Gregory",
       "customer": {
         "name": "Consumidor Final",
         "nif": "999999990"
@@ -759,7 +743,7 @@
       "isSecondCopy": false,
       "printCount": 0,
       "status": "emitido",
-      "operatorName": "Carlos Silva",
+      "operatorName": "Gregory",
       "whatsappSentAt": "2026-11-07T02:36:40.969Z",
       "whatsappRecipient": "Compartilhamento Mobile"
     },
@@ -862,7 +846,7 @@
       "isSecondCopy": false,
       "printCount": 0,
       "status": "emitido",
-      "operatorName": "Carlos Silva"
+      "operatorName": "Gregory"
     }
   ],
   "shifts": [
@@ -870,7 +854,7 @@
       "id": "shift-1",
       "shiftNumber": 104,
       "openedAt": "2026-11-06T21:05:53.835Z",
-      "openedBy": "Carlos Silva",
+      "openedBy": "Gregory",
       "openingAmount": 150,
       "expectedCashAmount": 229.5,
       "status": "aberta",
@@ -881,7 +865,7 @@
           "type": "entrada",
           "amount": 50,
           "reason": "Reforço de troco pelo gerente",
-          "operatorName": "Carlos Silva",
+          "operatorName": "Gregory",
           "timestamp": "2026-11-06T22:05:53.835Z"
         }
       ],
@@ -905,7 +889,7 @@
       "status": "success",
       "requestSummary": "Emissão fiscal da venda PED-2026-0002 (FS)",
       "responseSummary": "Documento emitido: FS 2026/0002, ATCUD: CS89J2-0002",
-      "operatorName": "Carlos Silva",
+      "operatorName": "Gregory",
       "saleId": "sale-1794015873011-2",
       "documentType": "FS",
       "documentNumber": "FS 2026/0002"
@@ -917,7 +901,7 @@
       "status": "success",
       "requestSummary": "Emissão fiscal da venda PED-2026-0001 (FS)",
       "responseSummary": "Documento emitido: FS 2026/0001, ATCUD: CS89J2-0001",
-      "operatorName": "Carlos Silva",
+      "operatorName": "Gregory",
       "saleId": "sale-1794013739105-1",
       "documentType": "FS",
       "documentNumber": "FS 2026/0001"
@@ -928,7 +912,7 @@
       "id": "aud-1794019064503-zaul",
       "timestamp": "2026-11-07T02:37:44.503Z",
       "userId": "usr-system",
-      "userName": "Carlos Silva",
+      "userName": "Gregory",
       "action": "Criação de Produto",
       "category": "produto",
       "details": "Produto criado: Suco Natural de Laranja (12.50 €)"
@@ -937,7 +921,7 @@
       "id": "aud-1794019000970-xinm",
       "timestamp": "2026-11-07T02:36:40.970Z",
       "userId": "usr-system",
-      "userName": "Carlos Silva",
+      "userName": "Gregory",
       "action": "Envio de Documento por WhatsApp",
       "category": "fatura",
       "details": "Comprovante fiscal FS 2026/0002 enviado via WhatsApp para Compartilhamento Mobile"
@@ -946,7 +930,7 @@
       "id": "aud-1794015873013-e0s1",
       "timestamp": "2026-11-07T01:44:33.013Z",
       "userId": "usr-system",
-      "userName": "Carlos Silva",
+      "userName": "Gregory",
       "action": "Registo de Venda",
       "category": "venda",
       "details": "Venda PED-2026-0002 (35.00 €) - Estado fiscal: EMITIDO"
@@ -955,7 +939,7 @@
       "id": "aud-1794013739107-8ka5",
       "timestamp": "2026-11-07T01:08:59.107Z",
       "userId": "usr-system",
-      "userName": "Carlos Silva",
+      "userName": "Gregory",
       "action": "Registo de Venda",
       "category": "venda",
       "details": "Venda PED-2026-0001 (79.50 €) - Estado fiscal: EMITIDO"
@@ -964,7 +948,7 @@
       "id": "aud-1",
       "timestamp": "2026-11-06T21:05:53.835Z",
       "userId": "usr-1",
-      "userName": "Carlos Silva",
+      "userName": "Gregory",
       "action": "Abertura de Caixa #104",
       "category": "caixa",
       "details": "Caixa aberta com fundo de troco inicial de R$ 150,00"

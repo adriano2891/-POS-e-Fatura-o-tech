@@ -140,13 +140,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
         </div>
 
         {activeShift ? (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => {
                 setMovementType('entrada');
                 setIsMovementModalOpen(true);
               }}
-              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 transition-colors"
+              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 transition-colors text-center cursor-pointer"
             >
               + Entrada de Trocos
             </button>
@@ -155,13 +155,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 setMovementType('sangria');
                 setIsMovementModalOpen(true);
               }}
-              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 transition-colors"
+              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 transition-colors text-center cursor-pointer"
             >
               - Saída / Sangria
             </button>
             <button
               onClick={() => setIsClosingModalOpen(true)}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white transition-colors shadow-xs"
+              className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white transition-colors shadow-xs text-center cursor-pointer"
             >
               Fechar Caixa
             </button>
@@ -380,15 +380,15 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
 
       {/* MODAL DE ABERTURA */}
       {isOpeningModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
-            <div className="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 my-auto max-h-[92vh] flex flex-col">
+            <div className="p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
               <h4 className="font-bold text-sm">Abertura de Sessão de Caixa</h4>
-              <button onClick={() => setIsOpeningModalOpen(false)} className="text-stone-400 hover:text-white">
+              <button onClick={() => setIsOpeningModalOpen(false)} className="text-stone-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleOpenShift} className="p-5 space-y-4 text-xs">
+            <form onSubmit={handleOpenShift} className="p-5 space-y-4 text-xs overflow-y-auto">
               <div>
                 <label className="block font-bold text-stone-700 mb-1">
                   Fundo Inicial de Troco (R$):
@@ -409,13 +409,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsOpeningModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200"
+                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold cursor-pointer"
                 >
                   Confirmar Abertura
                 </button>
@@ -427,17 +427,17 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
 
       {/* MODAL DE ENTRADA / SANGRIA */}
       {isMovementModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
-            <div className="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 my-auto max-h-[92vh] flex flex-col">
+            <div className="p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
               <h4 className="font-bold text-sm capitalize">
                 {movementType === 'entrada' ? 'Entrada Manual de Dinheiro' : 'Saída / Sangria de Caixa'}
               </h4>
-              <button onClick={() => setIsMovementModalOpen(false)} className="text-stone-400 hover:text-white">
+              <button onClick={() => setIsMovementModalOpen(false)} className="text-stone-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleAddMovement} className="p-5 space-y-3.5 text-xs">
+            <form onSubmit={handleAddMovement} className="p-5 space-y-3.5 text-xs overflow-y-auto">
               <div>
                 <label className="block font-bold text-stone-700 mb-1">Valor (R$):</label>
                 <input
@@ -466,13 +466,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsMovementModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200"
+                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold"
+                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold cursor-pointer"
                 >
                   Registar Movimento
                 </button>
@@ -484,15 +484,15 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
 
       {/* MODAL DE FECHO DE CAIXA */}
       {isClosingModalOpen && activeShift && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
-            <div className="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 my-auto max-h-[92vh] flex flex-col">
+            <div className="p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
               <h4 className="font-bold text-sm">Fecho de Caixa #{activeShift.shiftNumber}</h4>
-              <button onClick={() => setIsClosingModalOpen(false)} className="text-stone-400 hover:text-white">
+              <button onClick={() => setIsClosingModalOpen(false)} className="text-stone-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCloseShift} className="p-5 space-y-4 text-xs">
+            <form onSubmit={handleCloseShift} className="p-5 space-y-4 text-xs overflow-y-auto">
               <div className="p-3 rounded-xl bg-stone-100 border border-stone-200 space-y-1">
                 <div className="flex justify-between">
                   <span className="text-stone-600">Dinheiro Calculado pelo Sistema:</span>
@@ -539,13 +539,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsClosingModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200"
+                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold"
+                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold cursor-pointer"
                 >
                   Confirmar e Trancar Caixa
                 </button>

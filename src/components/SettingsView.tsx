@@ -166,52 +166,52 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Subnavegação de Configurações */}
-      <div className="flex border-b border-stone-200 bg-white rounded-2xl p-2 shadow-xs gap-1.5 overflow-x-auto">
+      <div className="flex border-b border-stone-200 bg-white rounded-2xl p-1.5 sm:p-2 shadow-xs gap-1.5 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveSection('company')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 whitespace-nowrap cursor-pointer ${
             activeSection === 'company'
               ? 'bg-amber-500 text-stone-950 shadow-xs'
               : 'text-stone-600 hover:text-stone-950 hover:bg-stone-100'
           }`}
         >
-          <Building2 className="w-4 h-4" />
+          <Building2 className="w-4 h-4 shrink-0" />
           <span>Empresa &amp; Dados Cadastrais</span>
         </button>
 
         <button
           onClick={() => setActiveSection('certified')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 whitespace-nowrap cursor-pointer ${
             activeSection === 'certified'
               ? 'bg-amber-500 text-stone-950 shadow-xs'
               : 'text-stone-600 hover:text-stone-950 hover:bg-stone-100'
           }`}
         >
-          <ShieldCheck className="w-4 h-4" />
+          <ShieldCheck className="w-4 h-4 shrink-0" />
           <span>Módulo Fiscal &amp; Integração</span>
         </button>
 
         <button
           onClick={() => setActiveSection('users')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 whitespace-nowrap cursor-pointer ${
             activeSection === 'users'
               ? 'bg-amber-500 text-stone-950 shadow-xs'
               : 'text-stone-600 hover:text-stone-950 hover:bg-stone-100'
           }`}
         >
-          <Users className="w-4 h-4" />
+          <Users className="w-4 h-4 shrink-0" />
           <span>Usuários &amp; Permissões</span>
         </button>
 
         <button
           onClick={() => setActiveSection('logs')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 whitespace-nowrap cursor-pointer ${
             activeSection === 'logs'
               ? 'bg-amber-500 text-stone-950 shadow-xs'
               : 'text-stone-600 hover:text-stone-950 hover:bg-stone-100'
           }`}
         >
-          <History className="w-4 h-4" />
+          <History className="w-4 h-4 shrink-0" />
           <span>Auditoria &amp; Logs da API</span>
         </button>
       </div>

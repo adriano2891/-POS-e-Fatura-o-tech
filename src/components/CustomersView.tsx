@@ -274,18 +274,18 @@ export const CustomersView: React.FC<CustomersViewProps> = ({ currentUser }) => 
 
       {/* MODAL CLIENTE */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
-            <div className="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 max-h-[92vh] flex flex-col my-auto">
+            <div className="p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
               <h3 className="font-bold text-sm sm:text-base">
                 {editingCustomer ? 'Editar Ficha de Cliente' : 'Registar Novo Cliente'}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-white">
+              <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveCustomer} className="p-5 space-y-3.5 text-xs">
+            <form onSubmit={handleSaveCustomer} className="p-4 sm:p-5 space-y-3.5 text-xs flex-1 overflow-y-auto">
               <div>
                 <label className="block font-bold text-stone-700 mb-1">Nome Completo ou Razão Social:</label>
                 <input

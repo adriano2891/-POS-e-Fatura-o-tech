@@ -302,9 +302,9 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({ company, currentUser
 
       {/* MODAL DE EMISSÃO DE NOTA DE CRÉDITO (DOCUMENTO RETIFICATIVO AT) */}
       {ncTargetDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
-            <div className="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 my-auto max-h-[92vh] flex flex-col">
+            <div className="p-4 bg-stone-900 text-white flex items-center justify-between shrink-0">
               <div>
                 <h3 className="font-bold text-sm sm:text-base">
                   Emitir Nota de Crédito Retificativa
@@ -313,12 +313,12 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({ company, currentUser
                   A retificar o documento {ncTargetDoc.documentNumber} ({formatCurrency(ncTargetDoc.totals.finalTotal)})
                 </p>
               </div>
-              <button onClick={() => setNcTargetDoc(null)} className="text-stone-400 hover:text-white">
+              <button onClick={() => setNcTargetDoc(null)} className="text-stone-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleEmitCreditNote} className="p-5 space-y-4 text-xs">
+            <form onSubmit={handleEmitCreditNote} className="p-5 space-y-4 text-xs overflow-y-auto">
               <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 leading-relaxed">
                 <strong>Enquadramento Legal (Art. 29º do CIVA):</strong>
                 <p className="mt-1">
@@ -345,14 +345,14 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({ company, currentUser
                 <button
                   type="button"
                   onClick={() => setNcTargetDoc(null)}
-                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200"
+                  className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold hover:bg-stone-200 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingNc || !ncReason.trim()}
-                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                 >
                   {isSubmittingNc ? 'A emitir NC...' : 'Emitir Nota de Crédito Oficial'}
                 </button>

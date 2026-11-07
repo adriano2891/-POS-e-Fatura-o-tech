@@ -120,12 +120,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ company, currentUser =
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           {/* Seletor de Período */}
-          <div className="flex bg-stone-100 p-1 rounded-xl text-xs font-bold">
+          <div className="flex bg-stone-100 p-1 rounded-xl text-xs font-bold w-full sm:w-auto justify-between sm:justify-start">
             <button
               onClick={() => setPeriod('today')}
-              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition-all cursor-pointer text-center ${
                 period === 'today' ? 'bg-white shadow-xs text-stone-900' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
@@ -133,7 +133,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ company, currentUser =
             </button>
             <button
               onClick={() => setPeriod('week')}
-              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition-all cursor-pointer text-center ${
                 period === 'week' ? 'bg-white shadow-xs text-stone-900' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
@@ -141,7 +141,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ company, currentUser =
             </button>
             <button
               onClick={() => setPeriod('month')}
-              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition-all cursor-pointer text-center ${
                 period === 'month' ? 'bg-white shadow-xs text-stone-900' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
@@ -149,24 +149,26 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ company, currentUser =
             </button>
           </div>
 
-          <button
-            onClick={handleExportCsv}
-            title="Exportar dados do relatório em formato CSV"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-700 text-xs font-bold transition-colors cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>CSV</span>
-          </button>
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button
+              onClick={handleExportCsv}
+              title="Exportar dados do relatório em formato CSV"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-700 text-xs font-bold transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>CSV</span>
+            </button>
 
-          <button
-            onClick={handlePrint}
-            disabled={isPrinting || loading}
-            title="Imprimir relatório operacional ou salvar como PDF"
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
-          >
-            <Printer className={`w-3.5 h-3.5 ${isPrinting ? 'animate-pulse' : ''}`} />
-            <span>{isPrinting ? 'A preparar...' : 'Imprimir'}</span>
-          </button>
+            <button
+              onClick={handlePrint}
+              disabled={isPrinting || loading}
+              title="Imprimir relatório operacional ou salvar como PDF"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
+            >
+              <Printer className={`w-3.5 h-3.5 ${isPrinting ? 'animate-pulse' : ''}`} />
+              <span>{isPrinting ? 'A preparar...' : 'Imprimir'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
