@@ -39,6 +39,7 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowRight,
+  ArrowLeft,
   QrCode,
   Copy,
   Check,
@@ -59,12 +60,14 @@ interface PosViewProps {
   company: CompanyInfo;
   currentUser: { id: string; name: string; role: 'admin' | 'operador' };
   onSaleCompleted?: () => void;
+  onBackToMainMenu?: () => void;
 }
 
 export const PosView: React.FC<PosViewProps> = ({
   company,
   currentUser,
   onSaleCompleted,
+  onBackToMainMenu,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -484,16 +487,39 @@ export const PosView: React.FC<PosViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-3 h-auto lg:h-[calc(100vh-130px)] lg:min-h-[580px] lg:max-h-[calc(100vh-110px)] relative">
+    <div className="flex flex-col h-full w-full lg:grid lg:grid-cols-12 gap-0 lg:gap-3 lg:h-[calc(100vh-130px)] lg:min-h-[580px] lg:max-h-[calc(100vh-110px)] relative overflow-hidden bg-[#0a1017]">
+      {/* 0. BARRA SUPERIOR EXCLUSIVA DO PDV MOBILE: VOLTAR AO MENU PRINCIPAL + OPERADOR + STATUS */}
+      <div className="lg:hidden flex items-center justify-between px-3 py-2.5 bg-[#0d1520] border-b border-slate-800 text-white shrink-0 z-20">
+        <button
+          type="button"
+          onClick={onBackToMainMenu}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-stone-950 font-black text-xs transition-all cursor-pointer shadow-md shadow-amber-500/20"
+          title="Voltar ao Menu Principal"
+        >
+          <ArrowLeft className="w-4 h-4 stroke-[3]" />
+          <span>Menu Principal</span>
+        </button>
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 text-xs text-stone-300 font-semibold bg-slate-900/90 px-2.5 py-1.5 rounded-xl border border-slate-800">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="truncate max-w-[120px]">{currentUser.name}</span>
+          </div>
+          <span className="px-2 py-1 rounded-lg text-[10px] font-mono font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">
+            PDV
+          </span>
+        </div>
+      </div>
+
       {/* SELETOR MOBILE: CARDÁPIO vs CARRINHO / FECHAMENTO (Visível exclusivamente em telas < lg) */}
-      <div className="lg:hidden flex items-center bg-[#0d1520] p-1 rounded-2xl border border-slate-800 shrink-0">
+      <div className="lg:hidden flex items-center bg-[#0a1017] p-2 border-b border-slate-800 shrink-0 gap-2">
         <button
           type="button"
           onClick={() => setMobilePosTab('catalog')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             mobilePosTab === 'catalog'
-              ? 'bg-[#00E676] text-stone-950 shadow-md'
-              : 'text-stone-300 hover:text-white'
+              ? 'bg-[#00E676] text-stone-950 shadow-md font-black'
+              : 'bg-slate-900 text-stone-300 hover:text-white border border-slate-800'
           }`}
         >
           <Utensils className="w-4 h-4" />
@@ -505,8 +531,8 @@ export const PosView: React.FC<PosViewProps> = ({
           onClick={() => setMobilePosTab('cart')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             mobilePosTab === 'cart'
-              ? 'bg-amber-500 text-stone-950 shadow-md'
-              : 'text-stone-300 hover:text-white'
+              ? 'bg-amber-500 text-stone-950 shadow-md font-black'
+              : 'bg-slate-900 text-stone-300 hover:text-white border border-slate-800'
           }`}
         >
           <ShoppingCart className="w-4 h-4" />
@@ -520,7 +546,7 @@ export const PosView: React.FC<PosViewProps> = ({
       </div>
 
       {/* COLUNA ESQUERDA: CATÁLOGO DE PRODUTOS & IMAGENS (Cols 1-7) */}
-      <div className={`${mobilePosTab === 'catalog' ? 'flex' : 'hidden'} lg:flex lg:col-span-7 xl:col-span-7 2xl:col-span-7 flex-col h-[75vh] lg:h-full bg-[#0d1520] rounded-2xl border border-slate-800 shadow-xl overflow-hidden`}>
+      <div className={`${mobilePosTab === 'catalog' ? 'flex' : 'hidden'} lg:flex lg:col-span-7 xl:col-span-7 2xl:col-span-7 flex-col flex-1 min-h-0 h-full bg-[#0d1520] lg:rounded-2xl lg:border lg:border-slate-800 shadow-xl overflow-hidden`}>
         {/* Barra Superior do Catálogo: Filtros e Pesquisa */}
         <div className="p-3 border-b border-slate-800 space-y-2.5 bg-[#0d1520] shrink-0">
           <div className="flex items-center gap-2.5 justify-between">
@@ -588,7 +614,7 @@ export const PosView: React.FC<PosViewProps> = ({
         </div>
 
         {/* Grelha de Produtos com Foto Correspondente */}
-        <div className="flex-1 p-3 overflow-y-auto">
+        <div className="flex-1 p-2.5 sm:p-3 overflow-y-auto overscroll-contain">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <span className="text-sm font-semibold text-stone-400">Carregando catálogo...</span>
@@ -649,9 +675,24 @@ export const PosView: React.FC<PosViewProps> = ({
       </div>
 
       {/* COLUNA DIREITA: CAIXA PDV PROFISSIONAL ASSX TECH (Ajustado, sem cortes e 100% responsivo) */}
-      <div className={`${mobilePosTab === 'cart' ? 'flex' : 'hidden'} lg:flex lg:col-span-5 xl:col-span-5 2xl:col-span-5 flex-col min-h-[550px] lg:h-full bg-[#0d1520] rounded-2xl border-2 border-emerald-500 shadow-2xl overflow-hidden text-white`}>
+      <div className={`${mobilePosTab === 'cart' ? 'flex' : 'hidden'} lg:flex lg:col-span-5 xl:col-span-5 2xl:col-span-5 flex-col flex-1 min-h-0 h-full bg-[#0d1520] lg:rounded-2xl lg:border-2 lg:border-emerald-500 shadow-2xl overflow-hidden text-white`}>
         {/* 1. CABEÇALHO DA VENDA */}
-        <div className="p-2.5 sm:p-3 border-b border-slate-800 bg-[#0d1520] space-y-2 shrink-0">
+        <div className="p-2 sm:p-3 border-b border-slate-800 bg-[#0d1520] space-y-2 shrink-0">
+          {/* Botão de retorno ao cardápio exclusivo em mobile */}
+          <div className="lg:hidden flex items-center justify-between pb-1.5 border-b border-slate-800/80">
+            <button
+              type="button"
+              onClick={() => setMobilePosTab('catalog')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-emerald-400 font-bold text-xs cursor-pointer border border-slate-700/60 active:scale-95 transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>+ Adicionar Mais Itens</span>
+            </button>
+            <span className="text-xs text-stone-300 font-bold">
+              {cartItems.reduce((acc, i) => acc + i.quantity, 0)} {cartItems.length === 1 ? 'item' : 'itens'}
+            </span>
+          </div>
+
           <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
             {/* Ícone e Título da Venda */}
             <div className="flex items-center gap-2 shrink-0">
@@ -832,8 +873,8 @@ export const PosView: React.FC<PosViewProps> = ({
         {/* 2. CABEÇALHO DA LISTA DE PRODUTOS */}
         <div className="px-3 py-1.5 border-b border-slate-800/80 bg-slate-900/50 flex items-center text-[10px] font-bold text-stone-400 uppercase tracking-wider shrink-0">
           <div className="flex-1">Produto</div>
-          <div className="w-20 text-center">Qtd.</div>
-          <div className="w-16 sm:w-20 text-right">Preço</div>
+          <div className="w-18 sm:w-20 text-center">Qtd.</div>
+          <div className="hidden sm:block sm:w-20 text-right">Preço</div>
           <div className="w-16 sm:w-20 text-right">Subtotal</div>
           <div className="w-7 shrink-0"></div>
         </div>
@@ -938,8 +979,8 @@ export const PosView: React.FC<PosViewProps> = ({
                   </button>
                 </div>
 
-                {/* Preço Unitário */}
-                <div className="w-16 sm:w-20 text-right font-bold text-xs text-stone-300 shrink-0 font-mono">
+                {/* Preço Unitário (apenas telas médias/grandes) */}
+                <div className="hidden sm:block sm:w-20 text-right font-bold text-xs text-stone-300 shrink-0 font-mono">
                   {formatCurrency(item.unitPrice)}
                 </div>
 
@@ -2182,11 +2223,11 @@ export const PosView: React.FC<PosViewProps> = ({
 
       {/* BARRA FLUTUANTE DE FINALIZAÇÃO NO MOBILE (Apenas em telas pequenas quando no catálogo e houver itens) */}
       {cartItems.length > 0 && mobilePosTab === 'catalog' && (
-        <div className="lg:hidden sticky bottom-1 z-30 px-1 animate-in slide-in-from-bottom-2">
+        <div className="lg:hidden shrink-0 p-2 bg-[#0a1017] border-t border-slate-800 z-30 animate-in slide-in-from-bottom-2">
           <button
             type="button"
             onClick={() => setMobilePosTab('cart')}
-            className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-stone-950 rounded-2xl font-black text-xs sm:text-sm shadow-2xl border border-emerald-400 active:scale-95 transition-all cursor-pointer"
+            className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-stone-950 rounded-2xl font-black text-xs sm:text-sm shadow-2xl border border-emerald-400 active:scale-95 transition-all cursor-pointer"
           >
             <div className="flex items-center gap-2">
               <span className="w-6 h-6 rounded-lg bg-stone-950 text-emerald-400 flex items-center justify-center text-xs font-black">
@@ -2195,8 +2236,8 @@ export const PosView: React.FC<PosViewProps> = ({
               <span>Itens no Pedido</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm sm:text-base">{formatCurrency(totals.final)}</span>
-              <span className="text-[11px] font-bold bg-stone-950/20 px-2 py-1 rounded-lg">Ver Carrinho &rarr;</span>
+              <span className="font-mono text-sm sm:text-base font-black">{formatCurrency(totals.final)}</span>
+              <span className="text-[11px] font-black bg-stone-950/20 px-2.5 py-1 rounded-lg">Ver Carrinho &rarr;</span>
             </div>
           </button>
         </div>

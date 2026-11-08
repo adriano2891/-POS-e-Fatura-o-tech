@@ -85,9 +85,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-100 text-stone-900 font-sans">
+    <div className={`min-h-screen flex flex-col ${currentTab === 'pos' ? 'bg-[#0a1017] lg:bg-stone-100' : 'bg-stone-100'} text-stone-900 font-sans`}>
       {/* Barra de Topo */}
-      <div className="print:hidden">
+      <div className={`print:hidden ${currentTab === 'pos' ? 'hidden lg:block' : 'block'}`}>
         <Navbar
           currentUser={currentUser}
           users={users}
@@ -109,7 +109,11 @@ export default function App() {
       </div>
 
       {/* Área de Conteúdo Principal */}
-      <main className={currentTab === 'pos' ? 'flex-1 w-full mx-auto p-2 sm:p-3 max-w-[1800px] print:p-0' : 'flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 print:p-0 print:max-w-none'}>
+      <main className={
+        currentTab === 'pos'
+          ? 'flex-1 w-full mx-auto p-0 lg:p-3 max-w-none lg:max-w-[1800px] h-[100dvh] lg:h-auto overflow-hidden lg:overflow-visible print:p-0'
+          : 'flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 print:p-0 print:max-w-none'
+      }>
         {currentTab === 'dashboard' && (
           <DashboardView
             company={company}
@@ -125,6 +129,7 @@ export default function App() {
             company={company}
             currentUser={{ id: currentUser.id, name: currentUser.name, role: currentUser.role }}
             onSaleCompleted={refreshShiftAndMetrics}
+            onBackToMainMenu={() => setCurrentTab('dashboard')}
           />
         )}
 
@@ -178,7 +183,7 @@ export default function App() {
       </main>
 
       {/* Rodapé Institucional com Endereço Demonstrativo de São Paulo */}
-      <footer className="bg-white border-t border-stone-200 py-3 text-stone-500 text-[11px] print:hidden">
+      <footer className={`bg-white border-t border-stone-200 py-3 text-stone-500 text-[11px] print:hidden ${currentTab === 'pos' ? 'hidden lg:block' : 'block'}`}>
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
             &copy; 2026 <strong>{APP_CONFIG.appName}</strong> &bull; {APP_CONFIG.company.legalName} &bull; {APP_CONFIG.demoAddress.formatted} <span className="text-[10px] text-stone-400">({APP_CONFIG.demoAddress.notice})</span>
