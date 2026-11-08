@@ -33,10 +33,12 @@ export default function App() {
         api.getDashboardReport(),
       ]);
 
-      setCompany(comp);
-      setUsers(uList);
-      if (uList.length > 0 && !currentUser) {
-        setCurrentUser(uList[0]);
+      if (comp) setCompany(comp);
+      if (uList && uList.length > 0) {
+        setUsers(uList);
+        if (!currentUser) {
+          setCurrentUser(uList[0]);
+        }
       }
       setActiveShift(curShift);
       if (dashReport) {
@@ -45,6 +47,39 @@ export default function App() {
     } catch (err) {
       console.error('Erro ao carregar dados iniciais:', err);
     } finally {
+      // Garantia de segurança contra travamentos em qualquer hospedagem (Netlify, Vercel, offline):
+      setCompany((prev) => prev || {
+        name: APP_CONFIG.appName,
+        legalName: APP_CONFIG.company.legalName,
+        nif: APP_CONFIG.company.cnpj,
+        cae: '5611-2 - Restaurantes e Serviços de Alimentação e Bebidas',
+        address: APP_CONFIG.demoAddress.formatted,
+        postalCode: APP_CONFIG.demoAddress.postalCode,
+        city: APP_CONFIG.demoAddress.city,
+        country: 'Brasil',
+        phone: APP_CONFIG.company.phone,
+        email: APP_CONFIG.company.email,
+        website: 'https://assxtech.com.br',
+        shareCapital: 'R$ 50.000,00',
+        commercialRegistry: 'JUCESP nº 35.214.892.310',
+        logoUrl: '/assets/logos/official_logo.png',
+      });
+      setUsers((prev) => (prev.length > 0 ? prev : [{
+        id: 'usr-1',
+        name: 'Gregory',
+        email: 'Gregory@assxtech.com.br',
+        role: 'admin',
+        pin: '1234',
+        active: true,
+      }]));
+      setCurrentUser((prev) => prev || {
+        id: 'usr-1',
+        name: 'Gregory',
+        email: 'Gregory@assxtech.com.br',
+        role: 'admin',
+        pin: '1234',
+        active: true,
+      });
       setLoading(false);
     }
   };
